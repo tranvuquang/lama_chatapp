@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "../css/messenger.css";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { postAxiosData } from "../../axios/axiosConfig";
+import { getAxiosData, postAxiosData } from "../../axios/axiosConfig";
 import { selectAuth } from "../../features/auth/authSlice";
 import Topbar from "../../features/messenger/components/Topbar/Topbar";
 import { IConversation, IMessage } from "../../features/messenger/types";
+import Message from "../../features/messenger/components/Message/Message";
 
 type Props = {
   conversations: IConversation[];
@@ -18,7 +19,7 @@ const MessengerHomePage = ({ conversations = [], receiverIds = [] }: Props) => {
   const [receiverUsers, setReceiverUsers] = useState([]);
   const [currentChat, setCurrentChat] = useState<IConversation | null>(null);
   const [newMessage, setNewMessage] = useState("");
-  const [messages, /* setMessages */] = useState<IMessage[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -42,6 +43,19 @@ const MessengerHomePage = ({ conversations = [], receiverIds = [] }: Props) => {
     })();
   }, [accessToken, dispatch, receiverIds]);
 
+  useEffect(() => {
+    (async () => {
+      if (currentChat) {
+        const resData = (await getAxiosData(
+          `/api/messages/${currentChat.id}`,
+          accessToken,
+          dispatch
+        )) as any;
+        setMessages(resData.data.messages);
+      }
+    })();
+  }, [accessToken, currentChat, dispatch]);
+
   const onSetCurrentChat = async (conversation: IConversation) => {
     setCurrentChat(conversation);
   };
@@ -55,7 +69,12 @@ const MessengerHomePage = ({ conversations = [], receiverIds = [] }: Props) => {
       conversationId: currentChat?.id,
     };
 
-    console.log(message);
+    const { resData } = (await postAxiosData(
+      "/api/messages/create",
+      accessToken,
+      message,
+      dispatch
+    )) as any;
   };
 
   return (
@@ -96,7 +115,7 @@ const MessengerHomePage = ({ conversations = [], receiverIds = [] }: Props) => {
                     messages.map((m, index) => {
                       return (
                         <div key={index}>
-                          {/* <Message message={m} own={m.sender === user.id} /> */}
+                          <Message message={m} own={m.sender === user.id} />
                         </div>
                       );
                     })}
