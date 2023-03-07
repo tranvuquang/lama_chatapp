@@ -91,3 +91,24 @@ export const getUserById = async (
     return res.status(500).json({ status: 500, error: err.message });
   }
 };
+
+export const getReceivers = async (
+  req: RequestExtended,
+  res: ResponseExtended
+) => {
+  try {
+    const { receiverIds } = req.body;
+    const usersData = await users.findAll({
+      where: {
+        id: receiverIds,
+      },
+    });
+    return res.status(200).json({
+      message: "success",
+      status: 200,
+      users: usersData,
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 500, error: err.message });
+  }
+};
