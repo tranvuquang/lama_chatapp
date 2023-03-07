@@ -12,15 +12,12 @@ module.exports = (sequelize: any, DataTypes: any) => {
     },
   });
 
-  // Users.associate = (models: any) => {
-  //   Users.hasMany(models.Likes, {
-  //     onDelete: "cascade",
-  //   });
-
-  //   Users.hasMany(models.Posts, {
-  //     onDelete: "cascade",
-  //   });
-  // };
+  conversations.associate = (models: any) => {
+    conversations.hasMany(models.users, {
+      onDelete: "cascade",
+      foreignKey: "id", 
+    });
+  };
 
   return conversations;
 };

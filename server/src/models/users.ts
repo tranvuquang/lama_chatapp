@@ -16,15 +16,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
     },
   });
 
-  // Users.associate = (models: any) => {
-  //   Users.hasMany(models.Likes, {
-  //     onDelete: "cascade",
-  //   });
+  users.associate = (models: any) => {
+    users.belongsTo(models.conversations, {
+      onDelete: "cascade",
+      foreignKey: "id",
+    });
 
-  //   Users.hasMany(models.Posts, {
-  //     onDelete: "cascade",
-  //   });
-  // };
+  };
 
   return users;
 };
