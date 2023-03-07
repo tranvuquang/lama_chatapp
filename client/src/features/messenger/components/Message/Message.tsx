@@ -1,5 +1,5 @@
 import "./message.css";
-import { format } from "timeago.js";
+// import { format } from "timeago.js";
 import { IMessage } from "../../types";
 import { useAppSelector } from "../../../../app/hooks";
 import { selectAuth } from "../../../auth/authSlice";
@@ -21,12 +21,14 @@ export default function Message({
       <div className="messageTop">
         <img
           className="messageImg"
-          src={own ? user.profilePicture : recievePicture}
+          src={recievePicture}
           alt=""
         />
         <p className="messageText">{message.text}</p>
       </div>
-      <div className="messageBottom">{format(message.createdAt)}</div>
+      <div className="messageBottom">
+        {/* {format(message.createdAt)} */ message.createdAt}
+      </div>
     </div>
   );
 }
