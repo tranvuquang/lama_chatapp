@@ -1,8 +1,6 @@
 import "./message.css";
-// import { format } from "timeago.js";
 import { IMessage } from "../../types";
-import { useAppSelector } from "../../../../app/hooks";
-import { selectAuth } from "../../../auth/authSlice";
+import moment from "moment";
 
 type Props = {
   recievePicture?: string;
@@ -15,7 +13,6 @@ export default function Message({
   own,
   recievePicture = "https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 }: Props) {
-  const { user } = useAppSelector(selectAuth);
   return (
     <div className={own ? "message own" : "message"}>
       <div className="messageTop">
@@ -27,7 +24,7 @@ export default function Message({
         <p className="messageText">{message.text}</p>
       </div>
       <div className="messageBottom">
-        {/* {format(message.createdAt)} */ message.createdAt}
+        {moment(message.createdAt).fromNow()}
       </div>
     </div>
   );
