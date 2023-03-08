@@ -21,6 +21,7 @@ const MessengerHomePage = ({ conversations = [], receiverIds = [] }: Props) => {
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
 
+  // lay thong tin cua cac user nhan dc tin nhan qua mang receiverIds
   useEffect(() => {
     (async () => {
       if (receiverIds.length > 0) {
@@ -43,6 +44,7 @@ const MessengerHomePage = ({ conversations = [], receiverIds = [] }: Props) => {
     })();
   }, [accessToken, dispatch, receiverIds]);
 
+  // neu co cua so chat thi lay tin nhan cua cuoc hoi thoai do
   useEffect(() => {
     (async () => {
       if (currentChat) {
@@ -60,21 +62,27 @@ const MessengerHomePage = ({ conversations = [], receiverIds = [] }: Props) => {
     setCurrentChat(conversation);
   };
 
+  //gui tinh nhan
   const handleSubmit = async (evt: React.SyntheticEvent) => {
     evt.preventDefault();
-
-    const message = {
-      sender: user.id,
-      text: newMessage,
-      conversationId: currentChat?.id,
-    };
-
-    const { resData } = (await postAxiosData(
-      "/api/messages/create",
-      accessToken,
-      message,
-      dispatch
-    )) as any;
+    if (newMessage) {
+      const message = {
+        sender: user.id,
+        text: newMessage,
+        conversationId: currentChat?.id,
+      };
+      const { resData, reFetchData } = (await postAxiosData(
+        "/api/messages/create",
+        accessToken,
+        message,
+        dispatch,
+        `/api/messages/${currentChat?.id}`
+      )) as any;
+      if (resData && reFetchData) {
+        setMessages(reFetchData.data.messages);
+        setNewMessage("");
+      }
+    }
   };
 
   return (

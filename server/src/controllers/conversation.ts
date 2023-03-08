@@ -3,7 +3,7 @@ import db from "../models";
 
 import { RequestExtended, ResponseExtended } from "../types";
 import { Op } from "sequelize";
-const { conversations, users } = db;
+const { conversations } = db;
 
 // create new conversation
 export const createConversation = async (
